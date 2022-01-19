@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="UIC CS494 SP21 Final Project">
+  <meta name="author" content="Frank Errichiello & Tomasz Hulka">
+
+  <title>mySwimPro</title>
+
+  <!-- CDNS and more -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+  <script language="javascript" type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/p5.serialserver@0.0.28/lib/p5.serialport.js"></script>
+  <script src="sketch.js"></script>
+  <script src="workoutCreation.js"></script>
+  <script src="workoutDisplay.js"></script>
+  <script src="/Libraries/p5.sound.js"></script>
+  <script src="/Libraries/grafica.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="stylesheet.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+    integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
+  <link rel="stylesheet" href="/Libraries/FontAwesome/css/all.min.css">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    
+
+</head>
+
+<body style="background-image: url('Images/gradient3.png');">
+
+  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom fixed-top"> -->
+
+
+
+  <!-- Home page -->
+  <div class="container-fluid mt-1" id="home">
+    <div class="row mt-2 mb-2">
+      <div class="col-md-12 mb-3">
+        <h1 class="text-center" id="mySwimPro">
+          <b>mySwimPro</b>
+        </h1>
+        <h5 class="appdetails text-center">
+          A wearable device for swimmers.
+        </h5>
+      </div>
+      <div class="col-md-9 m-auto mb-3">
+        <div class="row text-center">
+
+          <div class="col-md-3">
+            <div class="card hc">
+              <div class="card-header">
+                <h3>Create</h3>
+              </div>
+              <div class="card-body">
+                <div class="row m-0">
+                  <div class="col-md-12">
+                    <p class="text-left"> Structure your workout and customize sets and exercises. Add optional warmup and cooldown exercises, set the distance and interval duration for each exercise.  </p>
+                    <p class="text-left"> Edit directly using our interface or download a template to import. </p>
+                    <p class="text-left"> Each workout can be exported as a readable pdf or a text file.</p>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+          <div class="col-md-3">
+
+            <div class="card hc">
+              <div class="card-header">
+                <h3>Tempo</h3>
+              </div>
+              <div class="card-body">
+                <p class="text-left"> Each set has an optional tempo that can be set, with a built-in feature to test your tempo before you set it.</p>
+                <p class="text-left"> The device on the swimmer has a buzzer that will allow them to follow the set tempo as they swim. </p>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card hc">
+              <div class="card-header">
+                <h3>Messages</h3>
+              </div>
+              <div class="card-body valign">
+                <p class="text-left">As a coach you can interrupt your swimmer by sending a unique buzzer pattern to let them know to stop swimming.</p>
+                <p class="text-left">Each swimmer's device has a force-sensitive pad to let them notify the coach.</p>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card hc">
+              <div class="card-header">
+                <h3>Monitor</h3>
+              </div>
+              <div class="card-body">
+                <p class="text-left">Our device can monitor heartrate, oxygen levels and activity periods. </p>
+                <p class="text-left">After each workout you can view the graphed data.</p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 m-auto">
+        <button type="button" class="btn btn-info btn-lg w-100" onclick="showWorkoutCreationScreen()">
+          <h2 class="mb-0">
+            Create your workout now!
+          </h2>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid mt-1 collapse" id="workoutCreation">
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Import Workout</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row m-0">
+              <div class="col-md-12 mb-2 mt-2">
+                <p>To import a previous workout, upload the the text file that you have previously exported and it will automatically add the workout to the application.</p>
+                <div id="p5Import"></div>
+              </div>           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Export Workout</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row m-0">
+              <div class="col-md-12 mb-2 mt-2">
+                <p>Export your workout as a pdf to give your swimmers a physical copy. You will not be able to import
+                  the pdf version back into the application</p>
+                <button class="btn btn-primary w-100" onclick="exportWorkoutPdf()">
+                  <h5 class="mb-0">Export as pdf</h5>
+                </button>
+              </div>
+              <div class="col-md-12 mb-2 mt-2">
+                <p>Export your workout as a text file so you can later import it back into the application. This will
+                  make it so you won't have to go through the setup process again for this specific workout.</p>
+                <button class="btn btn-primary w-100" onclick="exportWorkoutTxt()">
+                  <h5 class="mb-0">Export as text file</h5>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="importErrorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Error importing workout</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row m-0">
+              <div class="col-md-12 mb-2 mt-2">
+                <p id="errorTextImportModal"></p>
+                <p> Please try again </p>
+              </div>           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="row mt-2 mb-2">
+    <div class="col-md-12 mb-3">
+      <h1 class="text-center " id="workoutTxt">
+        <b>Create your workout!</b>
+      </h1>
+    </div>
+  </div>
+  <div class="row mt-2 mb-2" id="warpupDiv">
+    <div class="col-md-12 mb-2">
+      <div class="row  m-0">
+        <div class="col-md-6 m-auto">
+          <div class="row  m-0">
+            <div class="card p-0">
+              <div class="card-header mb-1">
+                <div class="row m-0">
+                  <div class="col-md-6">
+                    <h1 class="mb-0">
+                      <b>Warmup</b>
+                    </h1>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <button type="button" onclick="removeWorkout('warmup')" class="btn btn-danger btn-lg ml-4">Remove
+                      Warmup</button>
+                    <button type="button" onclick="hideSet('warmup', this)"
+                      class="btn btn-primary btn-lg ml-4">Hide</button>
+                  </div>
+                </div>
+              </div>
+              <div id="warmupCardBody" class="card-body">
+                <div class="row mb-1">
+                  <div class="col-md-12">
+                    <div class="row ">
+                      <div class="col-md-3">
+                        <button type="button" id="btnAddWarmupSet" onclick="showAddASet('warmup', this)"
+                          class="btn btn-primary btn-lg w-100 h-100">Add
+                          a Set</button>
+                      </div>
+                      <div class="col-md-3">
+                        <p class="mb-0">Tempo(seconds)</p>
+                        <input id="warmupTempo" type="text" class="form-control" placeholder="1.50">
+                      </div>
+                      <div class="col-md-3">
+                        <button type="button" id="btnTestTempo" onclick="testTempo(warmupTempo.value)"
+                          class="btn btn-secondary btn-lg w-100 h-100">Test Tempo</button>
+                      </div>
+                      <div class="col-md-3">
+                        <button type="button" id="btnSetTempo" onclick="setTempo('warmup',warmupTempo.value)"
+                        class="btn btn-success btn-lg w-100 h-100">Set Tempo</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="warmupSetCreation" class="row collapse mt-2 mb-1">
+                  <div id="setTemplate" style="display: none;">
+                    <div class="col-md-12">
+                      <h4>Adding new set</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Set Name:</p>
+                      <input type="text" class="form-control warmupSetName">
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Number of rounds:</p>
+                      <input type="number" value="1" min="1" max="100" class="form-control warmupSetNumRounds">
+                    </div>
+                  </div>
+                  <div id="addWarmUpSet" class="row mt-2">
+                    <div class="col-md-12">
+                      <h4>Adding new set</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Set Name:</p>
+                      <input type="text" class="form-control warmupSetName">
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Number of rounds:</p>
+                      <input type="number" value="1" min="1" max="100" class="form-control warmupSetNumRounds">
+                    </div>
+                  </div>
+
+                  <div class="row mt-2">
+                    <h4>Adding exercises to set</h4>
+                    <div id="exerciseTemplate" style="display: none;">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <p class="mb-0">Exercise Name:</p>
+                            <input type="text" class="form-control exerciseName">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Number of times:</p>
+                            <input type="number" value="1" min="1" max="100" class="form-control exerciseTimes">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Distance:</p>
+                            <select name="distance" id="distance" class="form-control exerciseDistance">
+                              <option value="Rest">Rest</option>
+                              <option value="25">25</option>
+                              <option value="50">50</option>
+                              <option value="75">75</option>
+                              <option value="100">100</option>
+                              <option value="150">150</option>
+                              <option value="200">200</option>
+                              <option value="300">300</option>
+                              <option value="400">400</option>
+                              <option value="500">500</option>
+                              <option value="1000">1000</option>
+                              <option value="1650">1650</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Interval:</p>
+                            <input class="form-control exerciseTime" type="text" placeholder="HH:MM:SS"
+                              oninput="formatTime(this)" MaxLength="8" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="exerciseNum">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <p class="mb-0">Exercise Name:</p>
+                          <input type="text" class="form-control exerciseName">
+                        </div>
+                        <div class="col-md-3">
+                          <p class="mb-0">Number of times:</p>
+                          <input type="number" value="1" min="1" max="100" class="form-control exerciseTimes">
+                        </div>
+                        <div class="col-md-3">
+                          <p class="mb-0">Distance:</p>
+                          <select name="distance" id="distance" class="form-control exerciseDistance">
+                            <option value="Rest">Rest</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="75">75</option>
+                            <option value="100">100</option>
+                            <option value="150">150</option>
+                            <option value="200">200</option>
+                            <option value="300">300</option>
+                            <option value="400">400</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                            <option value="1650">1650</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <p class="mb-0">Interval:</p>
+                          <input class="form-control exerciseTime" type="text" placeholder="HH:MM:SS"
+                            oninput="formatTime(this)" MaxLength="8" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <button type="button" onclick="addExerciseToCurrentSet('warmup')" class="btn btn-link mt-2"><i
+                        class="fas fa-plus-circle"></i> Add a exercise to set</button>
+                  </div>
+                  <div class="col-md-12">
+                    <h3>Done configuring your set?</h3>
+                    <button class="btn btn-primary" onclick="addSetToWorkout('warmup')">Add set to the warmup</button>
+                  </div>
+                </div>
+
+
+                <div id="warmupWorkout" class="workout row m-0 mt-4 p-2">
+                  <div class="col-md-12">
+                    <h4 class="mb-0">Your warmup is currently has no sets. <i class="far fa-frown"></i>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2 mb-2" id="mainDiv">
+    <div class="col-md-12 mb-2">
+      <div class="row  m-0">
+        <div class="col-md-6 m-auto">
+          <div class="row  m-0">
+            <div class="card p-0">
+              <div class="card-header mb-1">
+                <div class="row m-0">
+                  <div class="col-md-6">
+                    <h1 class="mb-0">
+                      <b>Main Workout</b>
+                    </h1>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <button type="button" onclick="hideSet('mainset', this)"
+                      class="btn btn-primary btn-lg ml-4">Hide</button>
+                  </div>
+                </div>
+
+              </div>
+              <div id="mainCardBody" class="card-body">
+                <div class="row mb-1">
+                  <div class="col-md-12">
+                    <div class="row ">
+                      <div class="col-md-3">
+                        <button type="button" id="btnAddMainSet" onclick="showAddASet('mainset', this)"
+                          class="btn btn-primary btn-lg w-100 h-100">Add
+                          a Set</button>
+                      </div>
+                      <div class="col-md-3">
+                        <p class="mb-0">Tempo(seconds)</p>
+                        <input id="mainsetTempo" type="text" class="form-control" placeholder="1.50">
+                      </div>
+                      <div class="col-md-3">
+                        <button type="button" id="btnTestTempo" onclick="testTempo(mainsetTempo.value)"
+                          class="btn btn-secondary btn-lg w-100 h-100">Test Tempo</button>
+                      </div>
+                      <div class="col-md-3">
+                        <button type="button" id="btnSetTempo" onclick="setTempo('mainset',mainsetTempo.value)"
+                        class="btn btn-success btn-lg w-100 h-100">Set Tempo</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="mainSetCreation" class="row collapse mt-2 mb-1">
+                  <div id="setTemplate" style="display: none;">
+                    <div class="col-md-12">
+                      <h4>Adding new set</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Set Name:</p>
+                      <input type="text" class="form-control mainSetName">
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Number of rounds:</p>
+                      <input type="number" value="1" min="1" max="100" class="form-control mainSetNumRounds">
+                    </div>
+                  </div>
+                  <div id="addMainSet" class="row mt-2">
+                    <div class="col-md-12">
+                      <h4>Adding new set</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Set Name:</p>
+                      <input type="text" class="form-control mainSetName">
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Number of rounds:</p>
+                      <input type="number" value="1" min="1" max="100" class="form-control mainSetNumRounds">
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <h4>Adding exercises to set</h4>
+                    <div id="exerciseTemplate" style="display: none;">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <p class="mb-0">Exercise Name:</p>
+                            <input type="text" class="form-control exerciseName">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Number of times:</p>
+                            <input type="number" value="1" min="1" max="100" class="form-control exerciseTimes">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Distance:</p>
+                            <select name="distance" id="distance" class="form-control exerciseDistance">
+                              <option value="Rest">Rest</option>
+                              <option value="25">25</option>
+                              <option value="50">50</option>
+                              <option value="75">75</option>
+                              <option value="100">100</option>
+                              <option value="150">150</option>
+                              <option value="200">200</option>
+                              <option value="300">300</option>
+                              <option value="400">400</option>
+                              <option value="500">500</option>
+                              <option value="1000">1000</option>
+                              <option value="1650">1650</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Interval:</p>
+                            <input class="form-control exerciseTime" type="text" placeholder="HH:MM:SS"
+                              oninput="formatTime(this)" MaxLength="8" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="exerciseNum">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <p class="mb-0">Exercise Name:</p>
+                            <input type="text" class="form-control exerciseName">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Number of times:</p>
+                            <input type="number" value="1" min="1" max="100" class="form-control exerciseTimes">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Distance:</p>
+                            <select name="distance" id="distance" class="form-control exerciseDistance">
+                              <option value="Rest">Rest</option>
+                              <option value="25">25</option>
+                              <option value="50">50</option>
+                              <option value="75">75</option>
+                              <option value="100">100</option>
+                              <option value="150">150</option>
+                              <option value="200">200</option>
+                              <option value="300">300</option>
+                              <option value="400">400</option>
+                              <option value="500">500</option>
+                              <option value="1000">1000</option>
+                              <option value="1650">1650</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Interval:</p>
+                            <input class="form-control exerciseTime" type="text" placeholder="HH:MM:SS"
+                              oninput="formatTime(this)" MaxLength="8" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <button type="button" onclick="addExerciseToCurrentSet('mainset')" class="btn btn-link mt-2"><i
+                          class="fas fa-plus-circle"></i> Add a exercise to set</button>
+                    </div>
+
+                  </div>
+                  <div class="col-md-12">
+                    <h3>Done configuring your set?</h3>
+                    <button class="btn btn-primary" onclick="addSetToWorkout('mainset')">Add set to the main
+                      workout</button>
+                  </div>
+
+                </div>
+                <div id="mainsetWorkout" class="workout row m-0 mt-4 p-2">
+                  <div class="col-md-12">
+                    <h4 class="mb-0">Your main workout currently has no sets. <i class="far fa-frown"></i>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2 mb-2" id="cooldownDiv">
+    <div class="col-md-12 mb-2">
+      <div class="row  m-0">
+        <div class="col-md-6 m-auto">
+          <div class="row  m-0">
+            <div class="card p-0">
+              <div class="card-header mb-1">
+                <div class="row m-0">
+                  <div class="col-md-6">
+                    <h1 class="mb-0">
+                      <b>Cooldown</b>
+                    </h1>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <button type="button" onclick="removeWorkout('cooldown')" class="btn btn-danger btn-lg ml-4">Remove
+                      Cooldown</button>
+                    <button type="button" onclick="hideSet('cooldown', this)"
+                      class="btn btn-primary btn-lg ml-4">Hide</button>
+                  </div>
+                </div>
+
+              </div>
+              <div id="cooldownCardBody" class="card-body">
+                <div class="row mb-1">
+                  <div class="col-md-12">
+                    <div class="row ">
+                      <div class="col-md-3">
+                        <button type="button" id="btnAddCooldownSet" onclick="showAddASet('cooldown', this)"
+                          class="btn btn-primary btn-lg w-100 h-100">Add
+                          a Set</button>
+                      </div>
+                      <div class="col-md-3">
+                        <p class="mb-0">Tempo(seconds)</p>
+                        <input id="cooldownTempo" type="text" class="form-control" placeholder="1.50">
+                      </div>
+                      <div class="col-md-3">
+                        <button type="button" id="btnTestTempo" onclick="testTempo(cooldownTempo.value)"
+                          class="btn btn-secondary btn-lg w-100 h-100">Test Tempo</button>
+                      </div>
+                      <div class="col-md-3">
+                        <button type="button" id="btnSetTempo" onclick="setTempo('cooldown',cooldownTempo.value)"
+                        class="btn btn-success btn-lg w-100 h-100">Set Tempo</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="cooldownSetCreation" class="row collapse mt-2 mb-1">
+                  <div id="setTemplate" style="display: none;">
+                    <div class="col-md-12">
+                      <h4>Adding new set</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Set Name:</p>
+                      <input type="text" class="form-control cooldownSetName">
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Number of rounds:</p>
+                      <input type="number" value="1" min="1" max="100" class="form-control cooldownSetNumRounds">
+                    </div>
+                  </div>
+                  <div id="addCooldownSet" class="row mt-2">
+                    <div class="col-md-12">
+                      <h4>Adding new set</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Set Name:</p>
+                      <input type="text" class="form-control cooldownSetName">
+                    </div>
+                    <div class="col-md-3">
+                      <p class="mb-0">Number of rounds:</p>
+                      <input type="number" value="1" min="1" max="100" class="form-control cooldownSetNumRounds">
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <h4>Adding exercises to set</h4>
+                    <div id="exerciseTemplate" style="display: none;">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <p class="mb-0">Exercise Name:</p>
+                            <input type="text" class="form-control exerciseName">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Number of times:</p>
+                            <input type="number" value="1" min="1" max="100" class="form-control exerciseTimes">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Distance:</p>
+                            <select name="distance" id="distance" class="form-control exerciseDistance">
+                              <option value="Rest">Rest</option>
+                              <option value="25">25</option>
+                              <option value="50">50</option>
+                              <option value="75">75</option>
+                              <option value="100">100</option>
+                              <option value="150">150</option>
+                              <option value="200">200</option>
+                              <option value="300">300</option>
+                              <option value="400">400</option>
+                              <option value="500">500</option>
+                              <option value="1000">1000</option>
+                              <option value="1650">1650</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Interval:</p>
+                            <input class="form-control exerciseTime" type="text" placeholder="HH:MM:SS"
+                              oninput="formatTime(this)" MaxLength="8" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="exerciseNum">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <p class="mb-0">Exercise Name:</p>
+                            <input type="text" class="form-control exerciseName">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Number of times:</p>
+                            <input type="number" value="1" min="1" max="100" class="form-control exerciseTimes">
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Distance:</p>
+                            <select name="distance" id="distance" class="form-control exerciseDistance">
+                              <option value="Rest">Rest</option>
+                              <option value="25">25</option>
+                              <option value="50">50</option>
+                              <option value="75">75</option>
+                              <option value="100">100</option>
+                              <option value="150">150</option>
+                              <option value="200">200</option>
+                              <option value="300">300</option>
+                              <option value="400">400</option>
+                              <option value="500">500</option>
+                              <option value="1000">1000</option>
+                              <option value="1650">1650</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
+                            <p class="mb-0">Interval:</p>
+                            <input class="form-control exerciseTime" type="text" placeholder="HH:MM:SS"
+                              oninput="formatTime(this)" MaxLength="8" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <button type="button" onclick="addExerciseToCurrentSet('cooldown')" class="btn btn-link mt-2"><i
+                          class="fas fa-plus-circle"></i> Add a exercise to set</button>
+                    </div>
+
+                  </div>
+                  <div class="col-md-12">
+                    <h3>Done configuring your set?</h3>
+                    <button class="btn btn-primary" onclick="addSetToWorkout('cooldown')">Add set to the
+                      cooldown</button>
+                  </div>
+
+                </div>
+                <div id="cooldownWorkout" class="workout row m-0 mt-4 p-2">
+                  <div class="col-md-12">
+                    <h4 class="mb-0">Your cooldown currently has no sets. <i class="far fa-frown"></i>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br/>
+  <br/><br/>
+  <br/>
+  <br/>
+  <br/>
+  <div class="custom-footer row pb-3 pt-3">
+    <div class="col-md-6 m-auto">
+      <div class="row">
+        <div class="col-md-3 mt-2 mb-2">
+          <button type="button" class="btn btn-info w-100 h-100" onclick="showHomeScreen()">
+            <h5 class="mb-0">Go Back Home</h5><i class="fas fa-home"></i>
+          </button>
+        </div>
+        <div class="col-md-3 mt-2 mb-2">
+          <button type="button" class="btn btn-secondary w-100 h-100" onclick="showImportModal()">
+            <h5 class="mb-0">Import your workout</h5><i class="fas fa-upload"></i>
+          </button>
+        </div>
+        <div class="col-md-3 mt-2 mb-2">
+          <button type="button" class="btn btn-dark w-100 h-100" onclick="showExportModal()">
+            <h5 class="mb-0">Export your workout</h5><i class="fas fa-download"></i>
+          </button>
+        </div>
+        <div class="col-md-3 mt-2 mb-2">
+          <button type="button" class="btn btn-success w-100 h-100" onclick="showWorkoutDisplayScreen()">
+            <h5 class="mb-0">Start Your Workout!</h5><i class="fas fa-swimmer"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <div class="container mt-1 collapse " id="workoutTimer">
+    <div class="modal fade" id="finishedWorkoutModal" tabindex="-1" role="dialog" aria-labelledby="finishedWorkoutModalLabel"
+    aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="finishedWorkoutModal">Viewing your workout activity</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row m-0 mb-2 mt-2">
+              <div class="col-md-12">
+                <button type="button" class="btn btn-info w-100 h-100" onclick="showHomeScreenAfterWorkout()">
+                  <h2 class="mb-0">Go Back Home<i class="fas fa-home ml-3"></i></h2>
+                </button>
+              </div>
+            </div>
+            <div class="row m-0  mb-2 mt-2">
+              <div class="col-md-12">
+                <h1 class="text-center">Heartrate</h1>
+              </div> 
+              <div id="heartrateGraph" class="col-md-8 m-auto">
+              
+              </div>             
+            </div>
+            <div class="row m-0  mb-2 mt-2">
+              <div class="col-md-12">
+                <h1 class="text-center">Blood Oxygen Level</h1>
+              </div>
+              <div id="oxygenGraph"  class="col-md-8 m-auto">
+              
+              </div>             
+                  
+            </div>
+            <div class="row m-0 mb-2 mt-2">
+              <div class="col-md-12">
+                <h1 class="text-center">Workout Activity</h1>
+              </div>
+              <div id="activityGraph"class="col-md-8 m-auto">
+              
+              </div>             
+            </div>
+            <div class="row m-0 mb-2 mt-2">
+              <div class="col-md-12">
+                <button type="button" class="btn btn-info w-100 h-100" onclick="showHomeScreenAfterWorkout()">
+                  <h2 class="mb-0">Go Back Home<i class="fas fa-home ml-3"></i></h2>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="alertSwimmerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Alert Your Swimmer</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row m-0">
+              <div class="col-md-12 mb-2 mt-2 text-center">
+               <h1 onclick="sendSwimmerMessage();"><i class="fas fa-whistle fa-9x text-primary"></i></h1>  
+              </div>           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="alertCoachModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Swimmer needs your attention</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row m-0">
+              <div class="col-md-12 mb-2 mt-2 text-center">
+                <h1>Swimmer made contact</h1>
+                <p>Your swimmer has pressed their contact button. You can close this and pause the workout and take action on what they need.</p>
+              </div>           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="swimmersVitalsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">View Your Swimmers Vitals</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row m-0">
+              <div class="col-md-12 mb-2 mt-2">
+                <p>Your swimmers vitals are display here allowing you to check their heart rate and oxygen levels of the blood.</p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <h1 class="text-center">Heartrate</h1>
+                    <h1 class="text-center"><i class="fas fa-heart-rate fa-4x"></i></h1>
+                    <h1 class="text-center"><span id="bpmVal">0</span> Bpm</h1>
+                  </div>
+                  <div class="col-md-6">
+                    <h1 class="text-center">Blood Oxygen Level</h1>
+                    <h1 class="text-center"><i class="fas fa-lungs fa-4x"></i></h1>
+                    <h1 class="text-center"><span id="bloodOxygenLevel">0</span> mmHg</h1>
+                  </div>
+                </div>
+              </div>           
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2 mb-2">
+      <div class="col-md-12 mb-3">
+        <h1 class="text-center" id="workoutTxt">
+          <b>Workout Time!</b>
+        </h1>
+      </div>
+    </div>
+    <div class="row mt-2 mb-2 display-bg" id="timerDiv">
+      <div class="col-md-12 text-center" style="font-size: 5rem;">
+        <p class="mb-0" id="currentWorkoutText"></p>
+      </div>
+      <div class="col-md-12 text-center" style="font-size: 12rem !important;">
+         <p class="mb-0" id="intervalTimer">00:00:00</p>
+      </div>
+      <div class="col-md-12 mb-4" style="font-size: 3rem !important;">
+        <div class="row">
+          <div class="col-4 text-left">
+            <p class="mb-0">ELAPSED</p>
+            <p class="mb-0" id="timeLeftText">(in workout)</p>
+          </div>
+          <div class="col-4 text-center">
+            <p class="mb-0">INTERVALS</p>
+            <p class="mb-0" id="intervalsText">(For entire workout)</p>
+          </div>
+          <div class="col-4 text-right">
+            <p class="mb-0">REMAINING</p>
+            <p class="mb-0" id="timeRemaingText">(in workout)</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 mb-4" style="font-size: 3rem !important;">
+        <div class="row">
+          <div class="col-1 text-center">
+            <h1 class="mb-0" style="display: contents;" onclick="restartCurrentWorkout()"><i class="fas fa-redo-alt"></i></h1>
+          </div>
+          <div class="col-10">
+            <div class="row">
+              <div class="col-5 text-center">
+                <p class="mb-0" id="currentExerciseText">Current Exercise</p>
+              </div>
+              <div class="col-1 text-center">
+                <h1 class="mb-0" style="display: contents;" onclick="showAlertSwimmerModal()"><i class="fas fa-whistle"></i></h1>
+              </div>
+              <div class="col-1 text-center">
+                <h1 class="mb-0" style="display: contents;" onclick="showSwimmersVitalsModal()"><i class="fas fa-monitor-heart-rate"></i></h1>
+              </div>
+              <div class="col-5 text-center">
+                <p class="mb-0" id="nextExerciseText">Next Exercise</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-1 text-center">
+            <h1 class="mb-0" id="btnStartWorkout" style="display: contents;" onclick="startWorkout(this)"><i class="fas fa-play"></i></h1>
+            <!-- Play/pause current workout -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /#page-content-wrapper -->
+
+
+  <!-- /#wrapper -->
+
+
+  <script type='text/javascript'>
+
+
+  </script>
+
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"
+    integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"
+    integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d" crossorigin="anonymous">
+  </script>
+
+</body>
+
+
+</html>

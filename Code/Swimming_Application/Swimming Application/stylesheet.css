@@ -1,0 +1,165 @@
+/* 
+Original Sidebar template CSS by Bootstrap, additional and modified styling by Tomasz Hulka and Frank Errichiello
+
+*/ 
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template/simple-sidebar)
+ * Copyright 2013-2020 Start Bootstrap
+ * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+
+
+#wrapper {
+    overflow-x: hidden;
+}
+
+.workout{
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.key {
+  border: 2px solid black;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 0 2px;
+}
+
+#p5_loading {
+  display: none;
+}
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+.highlighted {
+  border-radius: 5px !important;
+  border-color: black !important;
+  border-style: solid !important;
+  border-width: 5px !important;
+  box-shadow:  0 0 60px  rgba(0, 0, 255,5);
+}
+
+.selected{
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 5px;
+  box-shadow:inset 0 0 20px  rgb(255, 143, 0) !important;
+}
+
+.selected-mode{
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 5px;
+  box-shadow: 0 0 20px  rgb(96, 125, 77);
+}
+
+.selected-invisible {
+  border-radius: 5px;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px;
+  box-shadow: 0 0 40px rgba(255,255,255,0), inset 0 0 40px  rgba(255,255,255,0);
+  padding: 1rem;
+}
+
+.screen {
+  display: none;
+}
+
+.smallform {
+  width: 80px;
+}
+
+#map {
+  height: 100%;
+}
+
+#dummyP5Canvas {
+    display: block;
+}
+
+
+.display-bg{
+  background-color: white;
+  outline: 2px dashed lightgray;
+}
+
+@keyframes wiggle {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  73% { transform: translate(-1px, -1px) rotate(1deg); }
+  82% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.wiggle {
+ 
+  display: inline-block;
+  animation: wiggle .5s;
+
+}
+
+.custom-footer{
+  position:fixed; 
+  bottom:.5px; 
+  width:100%; 
+  background-color: white; 
+  z-index:100;
+}
+
+#mySwimPro {
+  font-size: 60px !important;
+  color: white;
+}
+
+#workoutTxt {
+  font-size: 50px !important;
+  color: white;
+}
+
+.appdetails {
+  color:#0dcaf0;
+}
+
+.hc {
+  min-height: 450px !important;
+}
+
+.valign {
+ 
+  vertical-align: middle !important;
+}
+
+#timerDiv div {
+  outline: 1px solid #c7c7c7;
+}

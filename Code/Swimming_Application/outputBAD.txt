@@ -1,0 +1,34 @@
+
+** Formatting details ** 
+
+ - Application is broken down into Warmup, Main, and Cooldown workouts (separated by #)
+ - Setting a tempo for each workout is optional; '#cooldownSet @ 5000' means a tempo of 5000ms (5 seconds)
+ - If you wish to skip a workout, simply do not enter any set information for it
+ - Each workout consists of sets followed by their exercises
+ - Set: name of set  * number of rounds
+ - Exercise: name of exercise * number of repetitions, distance, time allotted (HH:MM:SS)
+
+Thanks for using our application, here is your set:
+
+#warmUpSet @ 2000
+
+Set: Warmup Set 1 * 5
+Exercise: Kick * 10, 150,50:02:00
+Exercise: Pull * 15, 100,033:01:30
+Set: Warmup Set 2 * 5
+Exercise: Kick * 25, 200,00:03:00
+
+#mainSet @ 1500
+
+Set: Main Set 1 * 3
+Exercise: Springs on the 50 * 20, 50,00:00:50
+Exercise: Kick fast * 10, 200,85:01:30
+Set: Main Set 2 * 2
+Exercise: Pull * 3, 150,00:01:45
+Set: Main Set 3 * 4
+Exercise: Butterfly * 8, 200,00:03:30
+Exercise: Dolphin Dive * 2, 1000,0:15:00
+
+#cooldownSet @ 5000
+
+Exercise: Laps * 1, 500,00:02:00
